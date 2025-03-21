@@ -50,30 +50,30 @@ def plot(isotopeOrList):
     names=[]
     plt.xlabel("Time/s")
     plt.ylabel("Amount remaining/g")
-    plt.title("Decay rate of isotopes, g/s"
+    plt.title("Decay rate of isotopes, g/s")
     if isinstance(isotopeOrList, list):
-    # the function was sent a list of isotopes
-    # so iterate them and save the y values
+        # the function was sent a list of isotopes
+        # so iterate them and save the y values
         for i in isotopeOrList:
-    ys.append(getRemainingMassAtElapsedTime(i, t))
-    names.append(i["isotopeName"])
+            ys.append(getRemainingMassAtElapsedTime(i, t))
+            names.append(i["isotopeName"])
     else:
-    # just a single isotop
-    ys.append(getRemainingMassAtElapsedTime(isotopeOrList, t))
-    names.append(isotopeOrList["isotopeName"])
+        # just a single isotop
+        ys.append(getRemainingMassAtElapsedTime(isotopeOrList, t))
+        names.append(isotopeOrList["isotopeName"])
     k=0
     print(names)
 
     for thisY in ys:
         plt.plot(t, thisY)
-    k+=1
+        k+=1
     plt.legend(names, loc="upper right")
     plt.show()
 
 
-    # function to get user input for the isotope into a dictionary and return it.
-    # if the user enters q for the isotope name, it just returns an empty dictionary
-    # so the caller can work out what to do
+# function to get user input for the isotope into a dictionary and return it.
+# if the user enters q for the isotope name, it just returns an empty dictionary
+# so the caller can work out what to do
 def getIsotopeDetails():
     isotopeName = input("Enter the isotope name, or q to quit:")
     if isotopeName == 'q':
