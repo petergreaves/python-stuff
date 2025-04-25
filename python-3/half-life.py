@@ -12,16 +12,29 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from decimal import Decimal
 
 # constants for plotting on the x axis
 plotStart = 0
 plotEnd = 10
 plotGranularity = 110
 
+# function to calc the number of sigfigs in a number
+def countSigfigs(num):
+    return len(Decimal(str(num)).as_tuple().digits)
+
 
 # function to return a float to the required SFs
 def sigfigs(v, sigfigs):
     return np.format_float_positional(v, precision=sigfigs, unique=False, fractional=False, trim='k')
+
+# function that returns the lowest SFs of a list of numbers
+
+def getLowestSFs(numList):
+    sigFigs =[]
+    for n in numList:
+        sigFigs.append(countSigfigs(n))
+    return min(sigFigs)
 
 
 # function to returns the remaining mass (g) for an isotope at time t (s)
@@ -104,6 +117,10 @@ allIsotopeDetails = []
 
 # THE MAIN PROGRAM/ENTRY POINT
 while True:
+
+    print(getLowestSFs([33,1212,1.01,3]))
+
+
     # get the isotope details
     thisIsotopeDetails = getIsotopeDetails()
     # empty isotope means that it is time to quit, so
