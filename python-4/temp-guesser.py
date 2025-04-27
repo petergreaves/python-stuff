@@ -77,7 +77,7 @@ def plotResult(x, y, title):
 
 # storage for the result with the lowest root mean square deviation that
 # we have found by repeated guesses
-currentLowestRMSD = []
+currentLowestRMSD = None
 
 # main loop
 while True:
@@ -87,9 +87,9 @@ while True:
         # there is something to plot, so plot the result
         if len(currentLowestRMSD) > 0:
             plotResult(measured_lambdas * 1e-3, \
-                       currentLowestRMSD[0]["intensities"],
+                       currentLowestRMSD["intensities"],
                        "Intensities by wavelength for temperature " + \
-                       str(currentLowestRMSD[0]["temp"]) + " K")
+                       str(currentLowestRMSD["temp"]) + " K")
         else:
             print("Bye!")
             exit(0)
@@ -106,22 +106,21 @@ while True:
 
     # test the result to see if it is better (lower) that the current guess
     # the first time, we just store it because it is automatically the minimum so far
-    if len(currentLowestRMSD) == 0:  # first one, so this will be the best guess so far
+    if currentLowestRMSD is None:  # first one, so this will be the best guess so far
         print("Saving the first result with a root mean square deviation of", thisRMSD)
-        currentLowestRMSD.append({"temp": temperature, "rmsd": thisRMSD, "intensities": calculatedIntensities})
+        currentLowestRMSD = {"temp": temperature, "rmsd": thisRMSD, "intensities": calculatedIntensities}
     # compare the new root mean square deviation to one we have already stored
     # if it is lowest, replace it ...
-    elif thisRMSD < currentLowestRMSD[0]["rmsd"]:
+    elif thisRMSD < currentLowestRMSD["rmsd"]:
         print("Your latest guess has a lower root mean square deviation (" \
               , thisRMSD, \
               ") than currently stored, so we are saving it ... ")
-        currentLowestRMSD.clear()
-        currentLowestRMSD.append({"temp": temperature, "rmsd": thisRMSD, "intensities": calculatedIntensities})
+        currentLowestRMSD={"temp": temperature, "rmsd": thisRMSD, "intensities": calculatedIntensities}
     # the root mean square deviation cannot be lower that the one we already have, so let's
     # discard it
     else:
         print("No change to lowest root mean square deviation we've found so far (", \
-              currentLowestRMSD[0]["rmsd"], \
+              currentLowestRMSD["rmsd"], \
               " at temperature",
-              currentLowestRMSD[0]["temp"]), \
+              currentLowestRMSD["temp"]), \
             ")"
