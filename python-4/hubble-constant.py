@@ -1,4 +1,3 @@
-# Write your python code here.
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -61,10 +60,6 @@ xArray,yArray = np.array(parseRawDataToArrays())
 
 linear_regression_result = linear_regression(xArray,yArray)
 print("Hubble constant :",linear_regression_result["gradient"])
-plt.title("Hubble constant calculation")
-plt.xlabel("Distance, d/Mpc")
-plt.ylabel("Speed, v/kms^-1")
 plt.plot(xArray, xArray*linear_regression_result["gradient"]+linear_regression_result["intercept"])
 plt.plot(xArray, yArray, "*r")
 plt.show()
-

@@ -1,5 +1,6 @@
 import numpy as np
-import matplotlib.pyplot  as plt
+import matplotlib.pyplot as plt
+
 
 # implementation of lineear regression formula for 2 array
 # which we assume are symmetrical
@@ -7,7 +8,7 @@ def linear_regression(x, y):
     sum_x = sum(x)
     sum_y = sum(y)
     sum_xy = sum(x * y)
-    sum_xsquared= sum(x ** 2)
+    sum_xsquared = sum(x ** 2)
     square_of_sumx = sum_x ** 2
 
     intercept = ((sum_y * sum_xsquared) - (sum_x * sum_xy)) \
@@ -27,10 +28,9 @@ F = np.array([3.55, 2.96, 2.31, 2.01, 1.50, 1.02, 0.697, 0.226], float)
 # test_x=np.array([1, 2, 3], int)
 # test_y=np.array([5, 15, 27], int)
 
-result=linear_regression(x, F)
-print("Using x=",x, ", y=", F)
-print("Gradient=",result["gradient"], ", intercept=", result["intercept"])
-
-plt.plot(x,F)
+result = linear_regression(x, F)
+print("Using x=", x, ", y=", F)
+print("Gradient=", result["gradient"], ", intercept=", result["intercept"])
+plt.plot(x, x*result["gradient"]+result["intercept"])
+plt.plot(x, F, "*g")
 plt.show()
-
