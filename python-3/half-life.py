@@ -61,6 +61,7 @@ def plot(isotopeOrList):
     ys = []
     # list for the isotope names for the legend
     names=[]
+    plt.grid()
     plt.xlabel("Time/s")
     plt.ylabel("Amount remaining/g")
     plt.title("Decay rate of isotopes, g/s")
