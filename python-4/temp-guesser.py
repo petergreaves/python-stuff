@@ -20,7 +20,7 @@ measured_lambdas = np.array([4.405286344, 3.676470588, 3.144654088, \
                              2.754820937, 2.450980392, 2.004008016, 1.834862385, 1.377410468, \
                              0.881834215, 0.468823254], float)
 # Measured data: intensity in W m**-2 m**-1 sr**-1
-# these are the intensites we compare our calculated values to, using root mean square
+# these are the intensities we compare our calculated values to, using root mean square
 measured_intensities = np.array([3.10085E-05, 5.53419E-05, 8.8836E-05, \
                                  0.000129483, 0.000176707, 0.000284786, 0.00034148, 0.000531378, \
                                  0.000561909, 6.16936E-05], float)
@@ -30,17 +30,18 @@ measured_intensities = np.array([3.10085E-05, 5.53419E-05, 8.8836E-05, \
 # (a float), using Equation 4.4 from section 2.3 of the course materials
 # verbose=True will report its working in detail
 # the returned value is a list of calculated intensities (floats)
-def intensitiesForTemperature(lambdas_in_mm, temperature, verbose):
+def intensitiesForTemperature(lambdas_in_mm, temp, verbose):
     # for each lambda and temp combination, calculate
     # the result
+
     if verbose:
-        print("With temperature", temperature, "wl=", " and measured lambda=", lambdas_in_mm)
+        print("With temperature", temp, "and lambdas (mm)=", lambdas_in_mm)
     calculated_intensities = []
 
     # convert to metres
     lambdas_in_m = lambdas_in_mm * 1e-3
 
-    # let's calculate the intensities from the temperature and measured lambdas
+    # let's calculate the intensities from the temperature and lambdas
     for l in lambdas_in_m:
         partOneNumerator = (2 * planck_h * (c ** 2))
         partOneDenominator = (l ** 5)
@@ -70,12 +71,20 @@ def rootMeanSquareDev(measured, calculated):
 
 
 # helper function to handle plotting
-def plotResult(x, y, title):
+def plotResult(x, y, temp, title):
+    # get some smoother values for the best fit
+    lambdas_for_best_fit_mm = np.linspace(1, 50, 100, float)
+
+    # get the intensities for the best fit range of wavelengths and temperature
+    intensities_for_best_fit = intensitiesForTemperature(lambdas_for_best_fit_mm * 1e-1, temp, False)
+
     plt.title(title)
+    plt.grid()
     plt.xlabel("wavelength / m")
     plt.ylabel("intensity / W m^−2 sf^-1 m^-1")
-    plt.plot(x,y,'*g')
-    plt.plot(x, y)
+    plt.plot(x, y, '*r')
+    plt.plot(lambdas_for_best_fit_mm * 1e-4, intensities_for_best_fit, "b-")
+    plt.legend(['Values', "Best fit"], loc="upper right")
     plt.show()
     return
 
@@ -93,6 +102,7 @@ while True:
         if currentLowestRMSD:
             plotResult(measured_lambdas * 1e-3, \
                        currentLowestRMSD["intensities"],
+                       currentLowestRMSD["temp"],
                        "Intensities by wavelength for temperature " + \
                        str(currentLowestRMSD["temp"]) + " K")
         else:
@@ -111,8 +121,8 @@ while True:
 
         # the first time, we just save it because it is automatically the minimum so far
         if currentLowestRMSD is None:  # first time
-            print("Saving the first result with a root mean square deviation of "+str(thisRMSD) + \
-                  " at T " + str(temperature) +" K")
+            print("Saving the first result with a root mean square deviation of " + str(thisRMSD) + \
+                  " at T " + str(temperature) + " K")
             currentLowestRMSD = {"temp": temperature, "rmsd": thisRMSD, "intensities": calculatedIntensities}
         # test the root mean square deviation to see if it is better (lower)
         # than the current guess we have saved before
@@ -120,10 +130,10 @@ while True:
             print("Your latest guess has a lower root mean square deviation (" \
                   , thisRMSD, \
                   ") than currently stored, so we are saving it ... ")
-            currentLowestRMSD={"temp": temperature, "rmsd": thisRMSD, "intensities": calculatedIntensities}
+            currentLowestRMSD = {"temp": temperature, "rmsd": thisRMSD, "intensities": calculatedIntensities}
         # the root mean square deviation cannot be lower that the one we already have, so let's
         # discard it, and remind the user what the current minimum is
         else:
-            print("No change to lowest root mean square deviation we've found so far ("+ \
+            print("No change to lowest root mean square deviation we've found so far (" + \
                   str(currentLowestRMSD["rmsd"]) + " at T " + \
-                  str(currentLowestRMSD["temp"]) +" K)")
+                  str(currentLowestRMSD["temp"]) + " K)")
